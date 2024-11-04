@@ -1,0 +1,16 @@
+@use "./_variables" as vars
+.p-dialog
+  &-right
+    top: 0 !important
+    .p-dialog
+      margin: unset
+      max-height: 100%
+      
+.p-dialog
+  &-header, &-content
+    background-color: vars.$black-100
+  &-title
+    color: vars.$gray
+    font-family: vars.$roboto
+    font-weight: 800
+    font-size: 26px

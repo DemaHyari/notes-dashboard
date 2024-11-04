@@ -1,0 +1,40 @@
+.grid
+  display: grid
+  &--2
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  &--3
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  &--4
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+
+.gap
+  &--32
+    gap: 32px
+  &--24
+    gap: 24px
+  &--22
+    gap: 22px
+  &--20
+    gap: 20px
+  &--18
+    gap: 18px
+  &--16
+    gap: 16px
+  &--14
+    gap: 14px
+  &--12
+    gap: 12px
+
+.flex
+  display: flex
+  &-justify
+    &--between
+      justify-content: space-between
+    &--center
+      justify-content: center
+  &-align
+    &--center
+      align-items: center
+  &-direction
+    &--column
+      flex-direction: column

@@ -1,0 +1,67 @@
+@use "../shared/variables" as vars
+
+.notes
+  &-conteiner
+    background-color: vars.$black-100
+    min-height: 100vh
+    padding: 20px
+  &-header
+    height: 60px
+    width: calc( 100% - 58px )
+    border-radius: 7px 30px 30px 7px
+    padding-inline-start: 16px
+    &__title
+      font-size: 28px
+      font-weight: 700
+      margin-block: unset
+    &__search
+      all: unset
+      background: transparent
+      height: 80%
+      width: 60%
+      font-size: 16px
+    &__button
+      border-radius: 50%
+      width: 45px
+      height: 45px
+      padding: unset
+  &-block
+    border-radius: 16px
+    padding: 20px
+    cursor: pointer
+    &__title, &__text
+      font-family: vars.$roboto
+    &__title
+      margin-block: unset
+      font-size: 24px
+      font-weight: 700
+    &__text
+      display: -webkit-box
+      -webkit-line-clamp: 3
+      -webkit-box-orient: vertical
+      overflow: hidden
+      text-overflow: ellipsis
+      color: vars.$white-100
+      min-height: 64px
+    &__type
+      width: 18px
+      height: 18px
+      border-radius: 50%
+      display: inline-block
+      &--personal
+        background-color: vars.$personal
+      &--work
+        background-color: vars.$work
+      &--study
+        background-color: vars.$study
+      &--appointment
+        background-color: vars.$appointment
+    &__date
+      font-size: 14px
+      color: vars.$white-100
+  &-header, &-block
+    box-shadow: 0px 4px 20px rgba(155, 160, 172, 0.2)
+    &__title, &__text, &__search
+      font-family: vars.$roboto
+    &__title, &__search
+      color: vars.$white
