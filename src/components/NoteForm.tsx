@@ -9,11 +9,11 @@ import { TYPES } from "../types/types";
 
 interface Props {
   existingNote?: Note | null;
-  onFormSubmit?: () => void;
+  closeModalHandler?: () => void;
 }
 
 const NoteForm = (props: Props) => {
-  const { existingNote, onFormSubmit } = props;
+  const { existingNote, closeModalHandler } = props;
   const dispatch = useDispatch();
 
   const [noteData, setNoteData] = useState<Note>(
@@ -27,10 +27,19 @@ const NoteForm = (props: Props) => {
     }
   );
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const deleteNoteHandler = (id: string) => {
     dispatch(deleteNote(id));
+    closeModalHandler?.();
   };
 
+  /**
+   * Handles changes to input fields and updates the note data state.
+   *
+   * @param e - The change event triggered by input, textarea, select elements, or a custom SelectButtonChangeEvent.
+   * @returns void
+   */
   const changeHandler = (
     e:
       | React.ChangeEvent<
@@ -47,23 +56,36 @@ const NoteForm = (props: Props) => {
     });
   };
 
+  /**
+   * Handles the form submission event.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+   * @returns {void}
+   * 
+   * This function prevents the default form submission behavior, sets the submission state to true,
+   * and checks if the note data has a title or description. If both are missing, it returns early.
+   * If an existing note is being edited, it dispatches the editNote action with the note data.
+   * Otherwise, it dispatches the addNote action with the note data. Finally, it calls the closeModalHandler
+   * function if it exists.
+   */
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (noteData.title && noteData.description) {
-      if (existingNote) {
-        dispatch(editNote(noteData));
-      } else {
-        dispatch(addNote(noteData));
-      }
-      onFormSubmit?.();
+    setIsSubmitted(true);
+
+    if (!noteData.title && !noteData.description) return;
+
+    if (existingNote) {
+      dispatch(editNote(noteData));
     } else {
-      alert("Please fill in all fields");
+      dispatch(addNote(noteData));
     }
+    closeModalHandler?.();
   };
 
   useEffect(() => {
     if (existingNote) setNoteData(existingNote);
   }, [existingNote]);
+
   return (
     <form onSubmit={submitHandler}>
       <div className="form-group margin-bottom--24">
@@ -74,8 +96,10 @@ const NoteForm = (props: Props) => {
           name="title"
           value={noteData.title}
           onChange={changeHandler}
-          required
         />
+        {isSubmitted && !noteData.title && (
+          <small className="form-group__error margin-top--8">Title is required.</small>
+        )}
       </div>
       <div className="form-group margin-bottom--24">
         <label
@@ -90,6 +114,9 @@ const NoteForm = (props: Props) => {
           value={noteData.description}
           onChange={changeHandler}
         />
+        {isSubmitted && !noteData.description && (
+          <small className="form-group__error margin-top--8">Description is required.</small>
+        )}
       </div>
       <div className="form-group margin-bottom--24">
         <label className="form-group__label margin-bottom--8" htmlFor="type">
@@ -100,9 +127,9 @@ const NoteForm = (props: Props) => {
           optionLabel="label"
           optionValue="value"
           value={noteData.type}
-          options={TYPES}
+          options={TYPES.slice(1)}
           onChange={changeHandler}
-        ></SelectButton>
+        />
       </div>
       <div className="flex flex-align--center gap--12">
         <button className="button button--linear" type="submit">

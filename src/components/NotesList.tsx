@@ -8,41 +8,44 @@ import NoteCard from "./NoteCard";
 interface Props {
   editNoteHandler?: (note: Note) => void;
   searchValue?: string;
+  activeType?: "all" | "personal" | "work" | "study" | "appointment";
 }
 const NotesList = (props: Props) => {
-  const { editNoteHandler, searchValue } = props;
+  const { editNoteHandler, searchValue, activeType = "all" } = props;
 
   const notes = useSelector((state: RootState) => state.notes);
 
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
 
-  const searchHandler = useCallback(
-    (value: string) => {
-      setFilteredNotes(
-        notes.filter((note) => {
-          if (note.title.toLowerCase().match(value)) return note;
-        })
-      );
+  /**
+   * Filters the notes based on the provided search term and type.
+   *
+   * @param {string} searchTerm - The term to search for in the note titles.
+   * @param {string} type - The type of notes to filter by. If "all", all types are included.
+   * @returns {Array} The filtered list of notes.
+   */
+  const filterNotes = useCallback(
+    (searchTerm: string, type: string) => {
+      return notes.filter((note) => {
+        const matchesType = type === "all" || note.type === type;
+        const matchesSearch = note.title.toLowerCase().includes(searchTerm);
+
+        return matchesType && matchesSearch;
+      });
     },
     [notes]
   );
 
-  const notesToDisplay =
-    filteredNotes.length > 0 || searchValue ? filteredNotes : notes;
-
   useEffect(() => {
-    if (!searchValue) {
-      setFilteredNotes([]);
-      return;
-    }
-    searchHandler(searchValue.toLowerCase());
-  }, [searchValue, searchHandler]);
+    const term = searchValue?.toLowerCase() || "";
+    setFilteredNotes(filterNotes(term, activeType));
+  }, [searchValue, activeType, filterNotes]);
 
   return (
     <>
-      {notesToDisplay.length ? (
+      {filteredNotes.length ? (
         <div className="grid grid--4 gap--32">
-          {notesToDisplay.map((note) => (
+          {filteredNotes.map((note) => (
             <NoteCard
               key={note.id}
               note={note}

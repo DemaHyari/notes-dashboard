@@ -19,7 +19,7 @@ const NoteCard = (props: Props) => {
   };
 
   return (
-    <div className="notes-block" onClick={() => editHandler(note)}>
+    <div className="notes-block flex flex-direction--column flex-justify--between" onClick={() => editHandler(note)}>
       <h3 className="notes-block__title">{note.title}</h3>
       <p className="notes-block__text margin-bottom--20">{note.description}</p>
       <div className="flex flex-align--center flex-justify--between gap--12">
